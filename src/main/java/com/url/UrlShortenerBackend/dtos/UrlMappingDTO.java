@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import lombok.Data;
 
 @Data
-public class UrlMappingDIO {
+public class UrlMappingDTO {
 
   private Long id;
   private String originalUrl;

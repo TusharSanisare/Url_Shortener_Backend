@@ -10,14 +10,12 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.Data;
 
-@Data
 @Entity
+@Data
 public class ClickEvent {
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long id;
-
+  private Long id;
   private LocalDateTime clickDate;
 
   @ManyToOne

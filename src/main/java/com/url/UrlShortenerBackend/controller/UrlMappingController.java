@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.url.UrlShortenerBackend.dtos.ClickEventDTO;
-import com.url.UrlShortenerBackend.dtos.UrlMappingDIO;
+import com.url.UrlShortenerBackend.dtos.UrlMappingDTO;
 import com.url.UrlShortenerBackend.models.User;
 import com.url.UrlShortenerBackend.service.UrlMappingService;
 import com.url.UrlShortenerBackend.service.UserService;
@@ -26,31 +26,31 @@ import com.url.UrlShortenerBackend.service.UserService;
 import lombok.AllArgsConstructor;
 
 @RestController
-@AllArgsConstructor
 @RequestMapping("/api/urls")
+@AllArgsConstructor
 public class UrlMappingController {
-
   private UrlMappingService urlMappingService;
   private UserService userService;
 
+  // {"originalUrl":"https://example.com"}
+  // https://abc.com/QN7XOa0a --> https://example.com
+
   @PostMapping("/shorten")
   @PreAuthorize("hasRole('USER')")
-  public ResponseEntity<UrlMappingDIO> createShortUrl(@RequestBody Map<String, String> request, Principal principal) {
-
+  public ResponseEntity<UrlMappingDTO> createShortUrl(@RequestBody Map<String, String> request,
+      Principal principal) {
     String originalUrl = request.get("originalUrl");
     User user = userService.findByUsername(principal.getName());
-    UrlMappingDIO urlMappingDIO = urlMappingService.createShortUrl(originalUrl, user);
-    return ResponseEntity.ok(urlMappingDIO);
+    UrlMappingDTO urlMappingDTO = urlMappingService.createShortUrl(originalUrl, user);
+    return ResponseEntity.ok(urlMappingDTO);
   }
 
   @GetMapping("/myurls")
   @PreAuthorize("hasRole('USER')")
-  public ResponseEntity<List<UrlMappingDIO>> getUserUrls(Principal principal) {
-
+  public ResponseEntity<List<UrlMappingDTO>> getUserUrls(Principal principal) {
     User user = userService.findByUsername(principal.getName());
-    List<UrlMappingDIO> url = urlMappingService.getUrlsByUser(user);
-
-    return ResponseEntity.ok(url);
+    List<UrlMappingDTO> urls = urlMappingService.getUrlsByUser(user);
+    return ResponseEntity.ok(urls);
   }
 
   @GetMapping("/analytics/{shortUrl}")
@@ -58,30 +58,23 @@ public class UrlMappingController {
   public ResponseEntity<List<ClickEventDTO>> getUrlAnalytics(@PathVariable String shortUrl,
       @RequestParam("startDate") String startDate,
       @RequestParam("endDate") String endDate) {
-
-    DateTimeFormatter formater = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-    LocalDateTime start = LocalDateTime.parse(startDate, formater);
-    LocalDateTime end = LocalDateTime.parse(endDate, formater);
-
-    List<ClickEventDTO> clickEventDTOs = urlMappingService.getClickEventsByDate(shortUrl, start, end);
-
-    return ResponseEntity.ok(clickEventDTOs);
+    DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+    LocalDateTime start = LocalDateTime.parse(startDate, formatter);
+    LocalDateTime end = LocalDateTime.parse(endDate, formatter);
+    List<ClickEventDTO> clickEventDTOS = urlMappingService.getClickEventsByDate(shortUrl, start, end);
+    return ResponseEntity.ok(clickEventDTOS);
   }
 
-  @GetMapping("/totalclicks")
+  @GetMapping("/totalClicks")
   @PreAuthorize("hasRole('USER')")
   public ResponseEntity<Map<LocalDate, Long>> getTotalClicksByDate(Principal principal,
       @RequestParam("startDate") String startDate,
       @RequestParam("endDate") String endDate) {
-
-    DateTimeFormatter formater = DateTimeFormatter.ISO_LOCAL_DATE;
+    DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
     User user = userService.findByUsername(principal.getName());
-    LocalDate start = LocalDate.parse(startDate, formater);
-    LocalDate end = LocalDate.parse(endDate, formater);
-
+    LocalDate start = LocalDate.parse(startDate, formatter);
+    LocalDate end = LocalDate.parse(endDate, formatter);
     Map<LocalDate, Long> totalClicks = urlMappingService.getTotalClicksByUserAndDate(user, start, end);
-
     return ResponseEntity.ok(totalClicks);
   }
-
 }

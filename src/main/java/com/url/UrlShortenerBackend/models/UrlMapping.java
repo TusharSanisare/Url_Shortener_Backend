@@ -15,7 +15,6 @@ import lombok.Data;
 @Entity
 @Data
 public class UrlMapping {
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -29,5 +28,5 @@ public class UrlMapping {
   private User user;
 
   @OneToMany(mappedBy = "urlMapping")
-  private List<ClickEvent> ClickEvent;
+  private List<ClickEvent> clickEvents;
 }
