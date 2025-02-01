@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.url.UrlShortenerBackend.dtos.ClickEventDTO;
 import com.url.UrlShortenerBackend.dtos.UrlMappingDTO;
 import com.url.UrlShortenerBackend.models.User;
+import com.url.UrlShortenerBackend.service.AiService;
 import com.url.UrlShortenerBackend.service.UrlMappingService;
 import com.url.UrlShortenerBackend.service.UserService;
 
@@ -29,8 +30,10 @@ import lombok.AllArgsConstructor;
 @RequestMapping("/api/urls")
 @AllArgsConstructor
 public class UrlMappingController {
+
   private UrlMappingService urlMappingService;
   private UserService userService;
+  private AiService aiService;
 
   // {"originalUrl":"https://example.com"}
   // https://abc.com/QN7XOa0a --> https://example.com
@@ -76,5 +79,23 @@ public class UrlMappingController {
     LocalDate end = LocalDate.parse(endDate, formatter);
     Map<LocalDate, Long> totalClicks = urlMappingService.getTotalClicksByUserAndDate(user, start, end);
     return ResponseEntity.ok(totalClicks);
+  }
+
+  @PostMapping("/getAiUrls")
+  @PreAuthorize("hasRole('USER')")
+  public ResponseEntity<List<String>> getAiShortUrls(@RequestBody Map<String, String> request) {
+    String originalUrl = request.get("originalUrl");
+    List<String> li = aiService.getAiShortUrls(originalUrl);
+    return ResponseEntity.ok(li);
+  }
+
+  @PostMapping("/addAiUrl")
+  @PreAuthorize("hasRole('USER')")
+  public ResponseEntity<String> d(@RequestBody Map<String, String> request, Principal principal) {
+    User user = userService.findByUsername(principal.getName());
+    String originalUrl = request.get("originalUrl");
+    String url = request.get("url");
+    String response = aiService.addAiUrl(originalUrl, url, user);
+    return ResponseEntity.ok(response);
   }
 }
