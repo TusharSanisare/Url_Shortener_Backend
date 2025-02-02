@@ -76,9 +76,18 @@
       <scope>runtime</scope>
       <optional>true</optional>
     </dependency>
-		<dependency>
+
+		<!-- for local -->
+		<!-- <dependency>
       <groupId>com.mysql</groupId>
       <artifactId>mysql-connector-j</artifactId>
+      <scope>runtime</scope>
+    </dependency> -->
+
+		<!-- for production -->
+		<dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
       <scope>runtime</scope>
     </dependency>
 
@@ -105,6 +114,8 @@
 				<artifactId>json</artifactId>
 				<version>20210307</version>
 		</dependency>
+
+		
 
 
 	</dependencies>
