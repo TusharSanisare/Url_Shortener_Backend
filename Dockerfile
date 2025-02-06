@@ -1,6 +1,17 @@
-FROM openjdk:23
+# Use the latest stable OpenJDK version
+FROM openjdk:21-jdk-slim
+
+# Set working directory inside the container
 WORKDIR /app
-COPY . .
-RUN ./mvnw dependency:resolve
+
+# Copy Maven wrapper and source files
+COPY . /app
+
+# Resolve dependencies and build the application
+RUN ./mvnw clean package -DskipTests
+
+# Expose the application port
 EXPOSE 8080
-CMD ["./mvnw", "spring-boot:run"]
+
+# Run the built JAR file
+CMD ["java", "-jar", "target/url-shortener-backend.jar"]
