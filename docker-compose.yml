@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+  springboot-app:
+    image: url-shortener-backend
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/app
+      - /app/target
+    working_dir: /app
+    command: ["./mvnw", "spring-boot:run"]
+
