@@ -1,11 +1,14 @@
-# Use the latest stable OpenJDK version
+# Use latest OpenJDK
 FROM openjdk:21-jdk-slim
 
-# Set working directory inside the container
+# Set working directory
 WORKDIR /app
 
-# Copy Maven wrapper and source files
+# Copy everything into the container
 COPY . /app
+
+# Grant execute permission to the Maven wrapper
+RUN chmod +x mvnw
 
 # Resolve dependencies and build the application
 RUN ./mvnw clean package -DskipTests
