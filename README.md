@@ -1,6 +1,8 @@
 # URL Shortener with Microservices and AI-Powered Personalization
 ## A high-performance URL shortener built using Spring Boot, React, and PostgreSQL, with AI-powered personalized short URLs for enhanced user engagement. The application is designed to handle high traffic efficiently, leveraging Redis for caching, Docker for containerization, and Chart.js for real-time analytics.
 
+## Deployed Link visite - https://urshorty.in
+
 ## Features
 AI-Powered Personalization: Uses Deepseek API to generate personalized and relevant short URLs based on the content of the original URL.
 Redis Caching: Reduces database load and improves response times.
